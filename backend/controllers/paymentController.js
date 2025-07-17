@@ -1,5 +1,13 @@
-const Stripe = require('stripe');
 require('dotenv').config();
+
+const Stripe = require('stripe');
+
+// ✅ Check if key is set
+if (!process.env.STRIPE_SECRET_KEY) {
+    console.error("❌ STRIPE_SECRET_KEY not set in .env");
+    process.exit(1);
+}
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const Payment = require('../models/Payment');
@@ -28,7 +36,7 @@ exports.payForBooking = async (req, res) => {
                             name: `Booking: ${booking.vehicle.name}`,
                             description: `Rental from ${booking.pickupDate.toDateString()} to ${booking.returnDate.toDateString()}`
                         },
-                        unit_amount: Math.round(booking.totalCost * 100), // in cents
+                        unit_amount: Math.round(booking.totalCost * 100), // cents
                     },
                     quantity: 1,
                 },
@@ -46,12 +54,11 @@ exports.payForBooking = async (req, res) => {
     }
 };
 
-// Webhook to handle payment confirmation
 exports.stripeWebhook = async (req, res) => {
     let event;
 
     try {
-        event = req.body; // already parsed
+        event = req.body;
     } catch (err) {
         return res.status(400).send(`Webhook Error: ${err.message}`);
     }
@@ -59,8 +66,6 @@ exports.stripeWebhook = async (req, res) => {
     if (event.type === 'checkout.session.completed') {
         const session = event.data.object;
 
-        // You can store session.id → booking mapping in DB when creating session for more robust link
-        // Here we assume bookingId is passed as metadata for simplicity
         const bookingId = session.metadata?.bookingId;
 
         if (bookingId) {

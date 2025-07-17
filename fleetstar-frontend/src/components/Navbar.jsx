@@ -18,7 +18,7 @@ export default function Navbar() {
             <div className="max-w-6xl mx-auto px-4">
                 <div className="flex justify-between items-center h-16">
                     {/* Logo / Brand */}
-                    <Link to="/" className="text-lg font-bold">
+                    <Link to="/" className="text-lg font-bold text-white">
                         FleetStar Car Rentals
                     </Link>
 

@@ -44,7 +44,7 @@ export default function Bookings() {
     };
 
     return (
-        <div className="p-4">
+        <div className="p-4 w-screen">
             <h1 className="text-2xl mb-4">Bookings</h1>
 
             {error && <p className="text-red-500">{error}</p>}

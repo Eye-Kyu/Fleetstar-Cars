@@ -26,14 +26,14 @@ export default function Dashboard() {
     }, [user.token]);
 
     return (
-        <div className="p-4">
+        <div className="p-4 w-screen">
             <h1 className="text-2xl mb-4">Admin Dashboard</h1>
 
             {error && <p className="text-red-500">{error}</p>}
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div className="bg-white p-4 shadow rounded">
-                    <h2 className="text-lg">Total Bookings</h2>
+                    <h2 className="text-lg text-yellow">Total Bookings</h2>
                     <p className="text-2xl">{stats.totalBookings ?? 0}</p>
                 </div>
                 <div className="bg-white p-4 shadow rounded">
