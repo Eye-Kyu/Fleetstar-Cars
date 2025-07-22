@@ -2,44 +2,22 @@ const express = require('express');
 const router = express.Router();
 const upload = require('../middlewares/uploadMiddleware');
 const { protect, authorizeRoles } = require('../middlewares/authMiddleware');
-const {
-    createVehicle,
-    getVehicles,
-    getVehicleById,
-    updateVehicle,
-    deleteVehicle
-} = require('../controllers/vehicleController');
+const vehicleController = require('../controllers/vehicleController');
 
-// Public - view all vehicles
-router.get('/', getVehicles);
+// Public routes
+router.get('/', vehicleController.getVehicles);
+router.get('/:id', vehicleController.getVehicleById);
 
-// Public - view single vehicle
-router.get('/:id', getVehicleById);
+// Protected admin/staff routes
+router.use(protect, authorizeRoles('admin', 'staff'));
 
-// Admin/Staff - create
-router.post(
-    '/',
-    protect,
-    authorizeRoles('admin', 'staff'),
-    upload.single('image'),
-    createVehicle
-);
+// Create vehicle with image upload
+router.post('/', upload, vehicleController.createVehicle);
 
-// Admin/Staff - update
-router.put(
-    '/:id',
-    protect,
-    authorizeRoles('admin', 'staff'),
-    upload.single('image'),
-    updateVehicle
-);
+// Update vehicle with potential image upload
+router.put('/:id', upload, vehicleController.updateVehicle);
 
-// Admin/Staff - delete
-router.delete(
-    '/:id',
-    protect,
-    authorizeRoles('admin', 'staff'),
-    deleteVehicle
-);
+// Delete vehicle
+router.delete('/:id', vehicleController.deleteVehicle);
 
 module.exports = router;
