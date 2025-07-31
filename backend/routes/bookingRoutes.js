@@ -4,7 +4,8 @@ const {
     getAllBookings,
     getMyBookings,
     cancelBooking,
-    completeBooking
+    completeBooking,
+    updateBookingStatus  // NEW CONTROLLER
 } = require('../controllers/bookingController');
 
 const { protect, authorizeRoles } = require('../middlewares/authMiddleware');
@@ -26,6 +27,14 @@ router.put(
     protect,
     authorizeRoles('admin', 'staff'),
     completeBooking
+);
+
+// NEW: Admin/Staff - update booking status (approve/reject/etc)
+router.put(
+    '/:id/status',
+    protect,
+    authorizeRoles('admin', 'staff'),
+    updateBookingStatus
 );
 
 // Admin/Staff - view all bookings (with pagination & sorting)
